@@ -1,5 +1,12 @@
 <?php
 
+function auto_reload_admin_page() {
+  $page = $_SERVER['PHP_SELF'];
+  $sec = "5";
+  $output = '<meta http-equiv="refresh" content="'.$sec.';URL='.$page.'">';
+  echo $output;
+}
+
 /*$page_name = 'gameloft'; // Example: http://facebook.com/{PAGE_NAME}
 $page_id = '216238295505'; // can get form Facebook page settings
 $app_id = '115760638907583'; // can get form Developer Facebook Page

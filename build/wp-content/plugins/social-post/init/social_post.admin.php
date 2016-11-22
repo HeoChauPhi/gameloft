@@ -59,56 +59,82 @@ class SocialPostSettingsPage {
   public function page_init() {
     register_setting('social_post_option_config', 'social_post_board_settings');
 
-    // Facebook Account First
+    // Facebook Account
     add_settings_section(
-      'facebook_section_first', // ID
-      'Facebook Account First', // Title
+      'facebook_section_id', // ID
+      'Facebook Account', // Title
       array( $this, 'print_section_info' ), // Callback
       'social-post-setting-admin' // Page
     );
 
     add_settings_field(
-      'facebook_name_first',
+      'facebook_name',
       'Facebook Name',
       array( $this, 'form_textfield' ), // Callback
       'social-post-setting-admin', // Page
-      'facebook_section_first',
-      'facebook_name_first'
+      'facebook_section_id',
+      'facebook_name'
     );
 
     add_settings_field(
-      'facebook_page_id_first',
+      'facebook_page_id',
       'Facebook Page ID',
       array( $this, 'form_textfield' ), // Callback
       'social-post-setting-admin', // Page
-      'facebook_section_first',
-      'facebook_page_id_first'
+      'facebook_section_id',
+      'facebook_page_id'
     );
 
-    // Facebook Account Seccond
+    // Twitter Account
     add_settings_section(
-      'facebook_section_seccond', // ID
-      'Facebook Account Seccond', // Title
+      'twitter_section_id', // ID
+      'Twitter Account', // Title
       array( $this, 'print_section_info' ), // Callback
       'social-post-setting-admin' // Page
     );
 
     add_settings_field(
-      'facebook_name_seccond',
-      'Facebook Name',
+      'twitter_name',
+      'Twitter Name',
       array( $this, 'form_textfield' ), // Callback
       'social-post-setting-admin', // Page
-      'facebook_section_seccond',
-      'facebook_name_seccond'
+      'twitter_section_id',
+      'twitter_name'
     );
 
     add_settings_field(
-      'facebook_page_id_seccond',
-      'Facebook Page ID',
+      'twitter_page_id',
+      'Twitter Page ID',
       array( $this, 'form_textfield' ), // Callback
       'social-post-setting-admin', // Page
-      'facebook_section_seccond',
-      'facebook_page_id_seccond'
+      'twitter_section_id',
+      'twitter_page_id'
+    );
+
+    // Youtube Account
+    add_settings_section(
+      'youtube_section_id', // ID
+      'Youtube Account', // Title
+      array( $this, 'print_section_info' ), // Callback
+      'social-post-setting-admin' // Page
+    );
+
+    add_settings_field(
+      'youtube_name',
+      'Youtube Name',
+      array( $this, 'form_textfield' ), // Callback
+      'social-post-setting-admin', // Page
+      'youtube_section_id',
+      'youtube_name'
+    );
+
+    add_settings_field(
+      'youtube_page_id',
+      'Youtube Page ID',
+      array( $this, 'form_textfield' ), // Callback
+      'social-post-setting-admin', // Page
+      'youtube_section_id',
+      'youtube_page_id'
     );
   }
 
@@ -116,7 +142,7 @@ class SocialPostSettingsPage {
   * Print the Section text
   */
   public function print_section_info() {
-    echo "Configure to your Facebook account.";
+    //echo "Configure to your Social account.";
   }
 
   /**
