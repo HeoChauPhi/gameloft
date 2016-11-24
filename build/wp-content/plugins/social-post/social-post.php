@@ -10,64 +10,28 @@
  */
 
 include_once('init/social_post.admin.php');
+require_once('init/social-posttype.php');
 require_once('init/functions.php');
 
 // Admin settings.
 if(is_admin()) {
   $settings = new SocialPostSettingsPage();
-  echo 'HeoChauA';
-  
-  // Auto reload page
-  //add_action('wp_head','auto_reload_admin_page');
 }
 
 include_once('init/shortcode.php');
 include_once('options/options.php');
 
-function social_post_types() {
-  register_post_type( 'facebook_post',
-    array(
-      'labels' => array(
-        'name' => __( 'Facebook Post' ),
-        'singular_name' => __( 'Facebook Post' )
-      ),
-      'supports' => array(
-        'title',
-        'editor'
-      ),
-      'public' => true,
-      'has_archive' => true,
-    )
-  );
-
-  register_post_type( 'twitter_post',
-    array(
-      'labels' => array(
-        'name' => __( 'Twitter Post' ),
-        'singular_name' => __( 'Twitter Post' )
-      ),
-      'supports' => array(
-        'title',
-        'editor'
-      ),
-      'public' => true,
-      'has_archive' => true,
-    )
-  );
-
-  register_post_type( 'youtube_post',
-    array(
-      'labels' => array(
-        'name' => __( 'Youtube Post' ),
-        'singular_name' => __( 'Youtube Post' )
-      ),
-      'supports' => array(
-        'title',
-        'editor'
-      ),
-      'public' => true,
-      'has_archive' => true,
-    )
-  );
+/* Runs when plugin is activated */
+register_activation_hook(__FILE__, 'my_activation');
+function my_activation() {
+  if (! wp_next_scheduled ( 'my_hourly_event' )) {
+    wp_schedule_event(time(), 'hourly', 'my_hourly_event');
+  }
 }
-add_action( 'init', 'social_post_types' );
+add_action('my_hourly_event', 'get_face_post');
+
+/* Runs when plugin is deactivation */
+register_deactivation_hook(__FILE__, 'my_deactivation');
+function my_deactivation() {
+  wp_clear_scheduled_hook('my_hourly_event');
+}

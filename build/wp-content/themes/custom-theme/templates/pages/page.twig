@@ -17,8 +17,6 @@
     {{ flexible_content('view_component') }}
   {% endfor %}
 
-  {{shortcode('[social_post]')}}
-
   {% if function('comments_open') %}
   {% include 'comments.twig' %}
   {{ function('comment_form') }}
