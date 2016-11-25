@@ -14,6 +14,7 @@ function load_face_posts($page_id, $page_name, $app_id, $app_secret, $limit) {
     $post_atactment = json_decode($post_atactment, true);
 
     $media = array();
+    $facebook_type = array();
     $link_id = $post_atactment['link'];
 
     if (array_key_exists('message', $posts[$i])){
@@ -22,28 +23,33 @@ function load_face_posts($page_id, $page_name, $app_id, $app_secret, $limit) {
       $message = $posts[$i]['story'];
     }
 
-    if (array_key_exists('full_picture', $post_atactment)) {
-      $media[] = "<img src='".$post_atactment['full_picture']."' >";
+    if (array_key_exists('full_picture', $post_atactment)) { // image field
+      $media[] = $post_atactment['full_picture'];
+      $facebook_type[] = 'type_image';
     }
-    if (array_key_exists('source', $post_atactment)) {
+    if (array_key_exists('source', $post_atactment)) { // video field
       $media = array();
-      $media[] = "<video controls='' name='media'><source src='".$post_atactment['source']."' type='video/mp4'></video>";
+      $facebook_type = array();
+      $media[] = $post_atactment['source'];
+      $facebook_type[] = 'type_video';
     } 
-    if ((array_key_exists('source', $post_atactment)) && ($post_atactment['attachments']['data'][0]['type'] == "video_share_youtube")) {
+    if ((array_key_exists('source', $post_atactment)) && ($post_atactment['attachments']['data'][0]['type'] == "video_share_youtube")) { // youtube share field
       $media = array();
-      $media[] = '<iframe width="560" height="315" src="'.str_replace('?autoplay=1', '', $post_atactment['source']).'" frameborder="0" allowfullscreen></iframe>';
+      $facebook_type = array();
+      $media[] = str_replace('?autoplay=1', '', $post_atactment['source']);
+      $facebook_type[] = 'type_video_share';
     } 
-    if (array_key_exists('subattachments', $post_atactment['attachments']['data'][0])) {
+    if (array_key_exists('subattachments', $post_atactment['attachments']['data'][0])) { // Gallery field
       $album = $post_atactment['attachments']['data'][0]['subattachments']['data'];
       $media = array();
-      $media[] = "<ul>";
+      $facebook_type = array();
+      $facebook_type[] = 'type_gallery';
       foreach ($album as $item) {
-        $media[] = "<li><img src='" . $item['media']['image']['src'] . "' ></li>";
+        $media[] = $item['media']['image']['src'] . '{next_image}';
       }
-      $media[] = "</ul>";
     }
 
-    $title = array(); 
+    $arr_facebook_id = array(); 
     $args = array(
       'post_type' => 'facebook_post',
       'post_status' => 'any',
@@ -52,16 +58,14 @@ function load_face_posts($page_id, $page_name, $app_id, $app_secret, $limit) {
     if($facebook_post->have_posts()) {
       while ( $facebook_post->have_posts() ) {
         $facebook_post->the_post();
-        $post_title = get_the_title();
-        array_push($title, $post_title);
+        $face_id = social_post_option('facebook_post_id');
+        array_push($arr_facebook_id, $face_id);
       }
     }
 
-    print_r($title);
-
-    if(in_array($posts[$i]['id'], $title, false)){
+    if(in_array($posts[$i]['id'], $arr_facebook_id) == 0 ){
       $new_post = array(
-        'post_title'    => $message,
+        'post_title'    => nl2br($message),
         'post_status'   => 'pending',
         'post_type'     => 'facebook_post'
       );
@@ -69,9 +73,13 @@ function load_face_posts($page_id, $page_name, $app_id, $app_secret, $limit) {
       //SAVE THE POST
       $pid = wp_insert_post($new_post);
       update_post_meta($pid, '_cmb2_facebook_post_id', $posts[$i]['id']);
+      update_post_meta($pid, '_cmb2_facebook_page', $page_name);
+      update_post_meta($pid, '_cmb2_facebook_media', implode("\n", $media));
+      update_post_meta($pid, '_cmb2_facebook_type', implode("\n", $facebook_type));
+      //update_post_meta($pid, '_cmb2_facebook_media', implode("\n", $media));
     }
   }
-    do_action('wp_insert_post', 'wp_insert_post');
+  do_action('wp_insert_post', 'wp_insert_post');
 
 }
 
@@ -84,3 +92,12 @@ function get_face_post() {
   $limit = 1;
   load_face_posts($page_id, $page_name, $app_id, $app_secret, $limit);
 }
+
+function isa_add_every_three_minutes( $schedules ) {
+  $schedules['every_three_minutes'] = array(
+    'interval'  => 5,
+    'display'   => __( 'Every 5 secconds', 'textdomain' )
+  );
+  return $schedules;
+}
+add_filter( 'cron_schedules', 'isa_add_every_three_minutes' );

@@ -33,29 +33,14 @@ function social_post_metaboxes() {
     'desc'             => __( '', 'cmb2' ),
     'id'               => $prefix . 'facebook_media',
     'type'             => 'text',
-    'after_field'      => __( '<div class="download-files">Download</div>', 'cmb2' ),
+    'before_field'      => __( '<div class="demo-field"></div>', 'cmb2' ),
+    'after_field'      => __( '<div class="download-files"><a href="#" target="_blank" download>Download</a></div>', 'cmb2' ),
   ) );
 
   $cmb->add_field( array(
-    'name'             => __( 'Facebook Gallery', 'cmb2' ),
-    'desc'             => __( '', 'cmb2' ),
-    'id'               => $prefix . 'facebook_gallery',
-    'type'             => 'multicheck',
-    'options'          => array(
-      'check1'         => 'Check One',
-      'check2'         => 'Check Two',
-      'check3'         => 'Check Three',
-    ),
-    'after_field'      => __( '<div class="download-files">Download All</div>', 'cmb2' ),
+    'id'   => $prefix . 'facebook_type',
+    'type' => 'hidden',
   ) );
-
-  /*$cmb->add_field( array(
-    'name'             => __( 'Facebook Gallery', 'cmb2' ),
-    'desc'             => __( 'Facebook Gallery', 'cmb2' ),
-    'id'               => $prefix . 'facebook_gallery',
-    'type'             => 'text',
-    'after_field'        => __( '<div class="download-files">Download</div>', 'cmb2' ),
-  ) );*/
 }
 
 function social_post_option($name = '') {
