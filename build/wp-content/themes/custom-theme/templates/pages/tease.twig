@@ -23,6 +23,8 @@
 
   <div class="post-content">
     {{ post.content|shortcodes }}
+    {{ flexible_content('group_component') }}
+    {{ flexible_content('view_component') }}
   </div>
 
   {% if post.terms('tags') %}

@@ -73,17 +73,6 @@ function cat_view_list($attrs) {
       'format' => 'page/%#%',
     );
 
-    switch ($name) {
-      case 'media-press-releases':
-        $context['filter_item'] = Timber::get_posts(array(
-          'post_type'       => $post_type,
-          'posts_per_page'  => -1,
-          'post_status'          => 'publish',
-        ));
-        $context['filter_select'] = $filter_select;
-        break;
-    }
-
     $context['pager_base_url'] = get_pagenum_link(1);
     $context['pagination_type'] = $pagination_type;
     $context['use_pagination'] = $use_pagination;

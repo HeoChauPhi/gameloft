@@ -172,16 +172,31 @@ function flexible_content($name) {
   $fc_ob = get_field_object( $name, $post->ID );
 
   //print_r($fc);
+  //print_r($fc_ob);
 
   if ( !empty( $fc ) ) {
     foreach ($fc as $field) {
       $layout = $field['acf_fc_layout'];
       $fc_type[$layout] = array();
 
-      try {
-        Timber::render($layout . '.twig', $field);
-      } catch (Exception $e) {
-        echo 'Could not find a twig file for layout type: ' . $layout;
+      if ( $field['acf_fc_layout'] == 'box_views_group' ) {
+        $fc_sub = $field['views_shortcode_group']['view_component'];
+        //print_r($fc_sub);
+        foreach ($fc_sub as $field_sub) {
+          $layout_sub = $field_sub['acf_fc_layout'];
+
+          try {
+            Timber::render($layout_sub . '.twig', $field_sub);
+          } catch (Exception $e) {
+            echo 'Could not find a twig file for layout type: ' . $layout_sub;
+          }
+        }
+      } else {
+        try {
+          Timber::render($layout . '.twig', $field);
+        } catch (Exception $e) {
+          echo 'Could not find a twig file for layout type: ' . $layout;
+        }
       }
     }
   }
